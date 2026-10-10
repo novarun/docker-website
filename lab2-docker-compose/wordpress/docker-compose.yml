@@ -1,24 +1,30 @@
-version: '3.8'
-
 services:
   wordpress:
-    image: wordpress:4.4
+    image: wordpress:latest
     depends_on:
       - wordpress_db
     ports:
       - "8182:80"
+    # ADD THESE ENVIRONMENT VARIABLES:
+    environment:
+      WORDPRESS_DB_HOST: wordpress_db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: test
+      WORDPRESS_DB_NAME: wordpress
 
   wordpress_db:
-    image: mariadb
+    image: mariadb:10
     environment:
       MYSQL_ROOT_PASSWORD: test
+      # ADD THIS TO AUTOMATICALLY CREATE THE WORDPRESS DATABASE:
+      MYSQL_DATABASE: wordpress
 
   phpmyadmin:
-    image: corbinu/docker-phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
     depends_on:
       - wordpress_db
     ports:
       - "8181:80"
     environment:
-      MYSQL_USERNAME: root
+      PMA_HOST: wordpress_db
       MYSQL_ROOT_PASSWORD: test
